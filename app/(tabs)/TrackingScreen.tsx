@@ -1,6 +1,6 @@
 
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import { useRouter } from 'expo-router';
 
 export default function Placeholder(){
@@ -10,7 +10,7 @@ export default function Placeholder(){
             <View style={styles.spacer} />
             <Text style={styles.placeholdertext}>Tracking in Progress</Text>
             <View style={styles.spacer} />
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/PinVerification')}>
                 <Text style={styles.text}>Stop! Safe journey completed</Text>
             </TouchableOpacity>
         </View>
