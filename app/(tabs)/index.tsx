@@ -4,14 +4,27 @@ import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View} from '@/components/Themed';
 import { TouchableOpacity } from 'react-native';
 import {useRouter} from 'expo-router';
+import * as location from 'expo-location';
 
 
 export default function Touchable() {
   const router = useRouter();
+  const handleStartJourney = async () => {
+    try {
+      const { status } = await location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('Permission to access location was denied and the app cannot proceed.');
+        return;
+      }
+      router.push('/TrackingScreen');
+    } catch (error) {
+      console.error('Error requesting location permission:', error);
+    }
+  };
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/TrackingScreen')}>
-      <Text style={styles.title}>Start Journey</Text>
+      <TouchableOpacity style={styles.button} onPress={handleStartJourney}>
+        <Text style={styles.title}>Start Journey</Text>
       </TouchableOpacity>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <EditScreenInfo path="app/(tabs)/index.tsx" />

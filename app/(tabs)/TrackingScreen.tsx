@@ -2,14 +2,14 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import { useRouter } from 'expo-router';
+import mapView from 'react-native-maps';
+import MapView from "react-native-maps";
 
 export default function Placeholder(){
     const router = useRouter();
     return (
         <View style={styles.container}>
-            <View style={styles.spacer} />
-            <Text style={styles.placeholdertext}>Tracking in Progress</Text>
-            <View style={styles.spacer} />
+            <MapView style={styles.map} />
             <TouchableOpacity style={styles.button} onPress={() => router.push('/PinVerification')}>
                 <Text style={styles.text}>Stop! Safe journey completed</Text>
             </TouchableOpacity>
@@ -40,5 +40,9 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 16,
         color: '#ffffff',
+    },
+    map: {
+        width: '100%',
+        height: '100%',
     },
 });
