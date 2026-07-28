@@ -3,13 +3,19 @@ import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import { useRouter } from 'expo-router';
 import mapView from 'react-native-maps';
-import MapView from "react-native-maps";
+import MapView ,{ PROVIDER_GOOGLE } from "react-native-maps";
 
 export default function Placeholder(){
     const router = useRouter();
+    const DELHI_REGION = {
+        latitude: 28.6139,
+        longitude: 77.2090,
+        latitudeDelta: 0.0922,  // Controls vertical zoom level (smaller = zoomed in)
+        longitudeDelta: 0.0421, // Controls horizontal zoom level
+    };
     return (
         <View style={styles.container}>
-            <MapView style={styles.map} />
+            <MapView style={styles.map}  initialRegion={DELHI_REGION} provider={PROVIDER_GOOGLE} />
             <TouchableOpacity style={styles.button} onPress={() => router.push('/PinVerification')}>
                 <Text style={styles.text}>Stop! Safe journey completed</Text>
             </TouchableOpacity>

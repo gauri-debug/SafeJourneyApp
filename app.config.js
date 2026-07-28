@@ -1,3 +1,4 @@
+module.exports =
 {
   "expo": {
     "name": "SafeJourneyApp",
@@ -11,13 +12,23 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.gauri.safejourneyapp",
+      "config": {
+        "googleMaps": {
+          "apiKey": process.env.GOOGLE_MAPS_API_KEY
+        }
+      },
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -43,6 +54,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "bbeb225b-01f8-4fe0-85e3-2b481e7bd85c"
+      }
     }
   }
 }
