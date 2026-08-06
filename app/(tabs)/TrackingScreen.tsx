@@ -1,21 +1,56 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import { useRouter } from 'expo-router';
-import mapView from 'react-native-maps';
-import MapView ,{ PROVIDER_GOOGLE } from "react-native-maps";
+import MapView,{Marker} from 'react-native-maps';
+import * as location from 'expo-location';
 
 export default function Placeholder(){
+    const [userCoords, setUserCoords] = useState<location.LocationObjectCoords | null>(null);
     const router = useRouter();
-    const DELHI_REGION = {
-        latitude: 28.6139,
-        longitude: 77.2090,
-        latitudeDelta: 0.0922,  // Controls vertical zoom level (smaller = zoomed in)
-        longitudeDelta: 0.0421, // Controls horizontal zoom level
+    useEffect(() => {
+    let locationSubscription: location.LocationSubscription | null = null;
+    const startTracking = async () => {
+        locationSubscription = await location.watchPositionAsync(
+            {
+                accuracy: location.LocationAccuracy.High,
+                timeInterval: 5000,
+                distanceInterval: 10,
+            },
+            (location) => {
+                setUserCoords(location.coords);
+            }
+        );
     };
+
+    startTracking();
+
+    return () => {
+        if (locationSubscription) {
+            locationSubscription.remove();
+        }
+    };
+}, []);
+
     return (
         <View style={styles.container}>
-            <MapView style={styles.map}  initialRegion={DELHI_REGION} provider={PROVIDER_GOOGLE} />
+            <MapView style={styles.map} region={userCoords ? {
+          latitude: userCoords.latitude,
+          longitude: userCoords.longitude,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        } : undefined}>
+         {userCoords && (
+          <Marker 
+            coordinate={{
+              latitude: userCoords.latitude,
+              longitude: userCoords.longitude,
+            }}
+            title="My Location"
+            pinColor="red"
+          />
+        )}
+        </MapView>
             <TouchableOpacity style={styles.button} onPress={() => router.push('/PinVerification')}>
                 <Text style={styles.text}>Stop! Safe journey completed</Text>
             </TouchableOpacity>
@@ -48,6 +83,7 @@ const styles = StyleSheet.create({
         color: '#ffffff',
     },
     map: {
+        flex: 1,
         width: '100%',
         height: '100%',
     },

@@ -3,6 +3,7 @@ import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import { Text } from 'react-native';
 
 import { useColorScheme } from '@/components/useColorScheme';
 
@@ -36,7 +37,7 @@ export default function RootLayout() {
   }, [loaded]);
 
   if (!loaded) {
-    return null;
+    return <Text>Loading...</Text>;
   }
 
   return <RootLayoutNav />;

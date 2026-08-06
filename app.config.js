@@ -37,6 +37,7 @@ module.exports =
     },
     "plugins": [
       "expo-router",
+      "expo-secure-store",
       [
         "expo-splash-screen",
         {
@@ -62,4 +63,4 @@ module.exports =
       }
     }
   }
-}
+};
