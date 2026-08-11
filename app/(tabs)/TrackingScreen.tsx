@@ -2,12 +2,17 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import { useRouter } from 'expo-router';
-import MapView,{Marker} from 'react-native-maps';
+import MapView,{Marker,Polyline} from 'react-native-maps';
 import * as location from 'expo-location';
 
-export default function Placeholder(){
+export default function MapScreen(){
     const [userCoords, setUserCoords] = useState<location.LocationObjectCoords | null>(null);
     const router = useRouter();
+    const routeCoordinates = userCoords?[
+        { latitude: userCoords.latitude, longitude: userCoords.longitude },
+        { latitude: userCoords.latitude + 0.005, longitude: userCoords.longitude - 0.002 },
+        { latitude: userCoords.latitude - 0.004, longitude: userCoords.longitude + 0.001 },
+    ]: [];
     useEffect(() => {
     let locationSubscription: location.LocationSubscription | null = null;
     const startTracking = async () => {
@@ -21,8 +26,7 @@ export default function Placeholder(){
                 setUserCoords(location.coords);
             }
         );
-    };
-
+    }
     startTracking();
 
     return () => {
@@ -50,6 +54,7 @@ export default function Placeholder(){
             pinColor="red"
           />
         )}
+        <Polyline coordinates={routeCoordinates} strokeColor="#f1440f" strokeWidth={4} />
         </MapView>
             <TouchableOpacity style={styles.button} onPress={() => router.push('/PinVerification')}>
                 <Text style={styles.text}>Stop! Safe journey completed</Text>
