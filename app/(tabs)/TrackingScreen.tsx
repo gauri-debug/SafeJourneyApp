@@ -4,14 +4,15 @@ import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import { useRouter } from 'expo-router';
 import MapView,{Marker,Polyline} from 'react-native-maps';
 import * as location from 'expo-location';
+import * as turf from '@turf/turf';
 
 export default function MapScreen(){
     const [userCoords, setUserCoords] = useState<location.LocationObjectCoords | null>(null);
     const router = useRouter();
     const routeCoordinates = userCoords?[
         { latitude: userCoords.latitude, longitude: userCoords.longitude },
-        { latitude: userCoords.latitude + 0.005, longitude: userCoords.longitude - 0.002 },
-        { latitude: userCoords.latitude - 0.004, longitude: userCoords.longitude + 0.001 },
+        { latitude: userCoords.latitude + 0.004, longitude: userCoords.longitude - 0.004 },
+        { latitude: userCoords.latitude - 0.004, longitude: userCoords.longitude + 0.004 },
     ]: [];
     useEffect(() => {
     let locationSubscription: location.LocationSubscription | null = null;
@@ -36,6 +37,16 @@ export default function MapScreen(){
     };
 }, []);
 
+    useEffect(() => {
+        if(!userCoords || !routeCoordinates || routeCoordinates.length===0) return;
+        const turfUserPoint = turf.point([userCoords.longitude, userCoords.latitude]);
+        const geoJsonCoordinates = routeCoordinates.map((c) => [c.longitude, c.latitude]);
+        const turfRouteLine = turf.lineString(geoJsonCoordinates);
+        const distance = turf.pointToLineDistance(turfUserPoint, turfRouteLine, { units: 'meters' });
+        if (distance > 50) {
+            alert("You are off the route!");
+        }
+    }, [userCoords, routeCoordinates]);
     return (
         <View style={styles.container}>
             <MapView style={styles.map} region={userCoords ? {
