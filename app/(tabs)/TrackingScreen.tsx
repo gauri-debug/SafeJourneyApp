@@ -38,6 +38,7 @@ export default function MapScreen(){
 }, []);
 
     useEffect(() => {
+        if(isDrawingMode) return;
         if(!userCoords || !routeCoordinates || routeCoordinates.length===0) return;
         const turfUserPoint = turf.point([userCoords.longitude, userCoords.latitude]);
         const geoJsonCoordinates = routeCoordinates.map((c) => [c.longitude, c.latitude]);
