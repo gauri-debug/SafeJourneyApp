@@ -1,12 +1,22 @@
-import {useState} from 'react';
+import {useState, useContext, createContext} from 'react';
 import {LatLng} from 'react-native-maps';
 import * as turf from '@turf/turf';
-const DISTANCE_THRESHOLD = 0.0001;
-const useRouteDrawing = () => {
-    const [routeCoordinates, setRouteCoordinates] = useState<{ latitude: number; longitude: number }[]>([]);
+interface RouteContextType {
+  routeCoordinates: LatLng[];
+  isDrawingMode: boolean;
+  simplifiedRoute: any;
+  handlePanDrag: (e: { nativeEvent: { coordinate: LatLng } }) => void;
+  startDrawing: () => void;
+  finishDrawing: () => void;
+  clearRoute: () => void;
+}
+// Create a context for route drawing
+const RouteDrawingContext = createContext<RouteContextType | null>(null);
+export const RouteDrawingProvider = ({ children }: { children: React.ReactNode }) => {
+    const [routeCoordinates, setRouteCoordinates] = useState<LatLng[]>([]);
     const [isDrawingMode, setIsDrawingMode] = useState(false);
     const [simplifiedRoute, setSimplifiedRoute] = useState<any>(null);
-
+    const DISTANCE_THRESHOLD = 0.0001;
     const handlePanDrag = (e: { nativeEvent: { coordinate: LatLng } }) => {
         if (!isDrawingMode) return;
         const newCoord = e.nativeEvent.coordinate;
@@ -25,6 +35,7 @@ const useRouteDrawing = () => {
     };
     const clearRoute = () => {
         setRouteCoordinates([]);
+        setSimplifiedRoute(null);
     };
     const startDrawing = () => {
         setIsDrawingMode(true);
@@ -47,5 +58,15 @@ const useRouteDrawing = () => {
     const toggleDrawingMode = () => {
         setIsDrawingMode((prev) => !prev);
     };
-    return { routeCoordinates, isDrawingMode, handlePanDrag, clearRoute, toggleDrawingMode, startDrawing, finishDrawing };
+    return (
+    <RouteDrawingContext.Provider value={{
+      routeCoordinates, isDrawingMode, simplifiedRoute, handlePanDrag, startDrawing, finishDrawing, clearRoute}}>
+      {children}
+    </RouteDrawingContext.Provider>
+  );
+};
+export const useRouteContext = () => {
+  const context = useContext(RouteDrawingContext);
+  if (!context) throw new Error("Must be used within a RouteDrawingProvider");
+  return context;
 };

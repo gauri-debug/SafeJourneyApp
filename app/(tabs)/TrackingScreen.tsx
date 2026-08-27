@@ -5,29 +5,34 @@ import { useRouter } from 'expo-router';
 import MapView,{Marker,Polyline} from 'react-native-maps';
 import * as location from 'expo-location';
 import * as turf from '@turf/turf';
+import { RouteDrawingProvider, useRouteContext } from './useRouteDrawing';
+import { subscribe } from "expo-router/build/link/linking";
 
 export default function MapScreen(){
     const [userCoords, setUserCoords] = useState<location.LocationObjectCoords | null>(null);
     const router = useRouter();
-    const routeCoordinates = userCoords?[
-        { latitude: userCoords.latitude, longitude: userCoords.longitude },
-        { latitude: userCoords.latitude + 0.004, longitude: userCoords.longitude - 0.004 },
-        { latitude: userCoords.latitude - 0.004, longitude: userCoords.longitude + 0.004 },
-    ]: [];
+    const { 
+    routeCoordinates, isDrawingMode, handlePanDrag, clearRoute, startDrawing, finishDrawing, simplifiedRoute} = useRouteContext();
     useEffect(() => {
-    let locationSubscription: location.LocationSubscription | null = null;
-    const startTracking = async () => {
-        locationSubscription = await location.watchPositionAsync(
-            {
-                accuracy: location.LocationAccuracy.High,
-                timeInterval: 5000,
-                distanceInterval: 10,
-            },
-            (location) => {
-                setUserCoords(location.coords);
-            }
+        let isMounted = true; 
+        let locationSubscription: location.LocationSubscription | null = null;
+        const startTracking = async () => {
+            const sub = await location.watchPositionAsync(
+                {
+                    accuracy: location.LocationAccuracy.High,
+                    timeInterval: 5000,
+                    distanceInterval: 10,
+                },
+                (location) => {
+                    if (isMounted)
+                        setUserCoords(location.coords);
+                }
         );
-    }
+        if(!isMounted)
+            sub.remove();
+        else 
+            locationSubscription = sub;
+    };
     startTracking();
 
     return () => {
@@ -35,8 +40,7 @@ export default function MapScreen(){
             locationSubscription.remove();
         }
     };
-}, []);
-
+},[]);
     useEffect(() => {
         if(isDrawingMode) return;
         if(!userCoords || !routeCoordinates || routeCoordinates.length===0) return;
@@ -47,17 +51,23 @@ export default function MapScreen(){
         if (distance > 50) {
             alert("You are off the route!");
         }
-    }, [userCoords, routeCoordinates]);
+    }, [userCoords, routeCoordinates, isDrawingMode]);
     return (
-        <View style={styles.container}>
-            <MapView style={styles.map} region={userCoords ? {
-          latitude: userCoords.latitude,
-          longitude: userCoords.longitude,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005,
-        } : undefined}>
-         {userCoords && (
-          <Marker 
+    <View style={styles.container}>
+      {userCoords ? (
+        <MapView 
+          style={styles.map} 
+          onPanDrag={handlePanDrag} 
+          scrollEnabled={!isDrawingMode} 
+          showsUserLocation={true} 
+          initialRegion={{
+            latitude: userCoords.latitude, 
+            longitude: userCoords.longitude, 
+            latitudeDelta: 0.005, 
+            longitudeDelta: 0.005
+          }}
+        >
+          <Marker
             coordinate={{
               latitude: userCoords.latitude,
               longitude: userCoords.longitude,
@@ -65,14 +75,27 @@ export default function MapScreen(){
             title="My Location"
             pinColor="red"
           />
-        )}
-        <Polyline coordinates={routeCoordinates} strokeColor="#f1440f" strokeWidth={4} />
+
+          <Polyline 
+            coordinates={routeCoordinates} 
+            strokeColor="#f1440f" 
+            strokeWidth={4} 
+          />
         </MapView>
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/PinVerification')}>
-                <Text style={styles.text}>Stop! Safe journey completed</Text>
-            </TouchableOpacity>
-        </View>
-    );
+
+      ) : (
+
+        // 3. Show this while waiting for the GPS
+        <Text style={{ marginTop: 50, textAlign: 'center' }}>Finding your location...</Text>
+        
+      )}
+
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/PinVerification')}>
+        <Text style={styles.text}>Stop! Safe journey completed</Text>
+      </TouchableOpacity>
+      
+    </View>
+  );
 }
 const styles = StyleSheet.create({
     container: {

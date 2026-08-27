@@ -4,6 +4,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { Text } from 'react-native';
+import { Slot } from 'expo-router';
+import { RouteDrawingProvider } from './(tabs)/useRouteDrawing';
 
 import { useColorScheme } from '@/components/useColorScheme';
 
@@ -40,7 +42,11 @@ export default function RootLayout() {
     return <Text>Loading...</Text>;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <RouteDrawingProvider>
+       <Slot /> 
+    </RouteDrawingProvider>
+  );
 }
 
 function RootLayoutNav() {
