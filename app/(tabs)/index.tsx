@@ -1,15 +1,41 @@
 import { StyleSheet } from 'react-native';
-import { RouteDrawingProvider,useRouteContext } from './useRouteDrawing';
+import { RouteDrawingProvider,useRouteContext } from '../../utils/useRouteDrawing';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View} from '@/components/Themed';
 import { TouchableOpacity } from 'react-native';
 import {useRouter} from 'expo-router';
 import * as location from 'expo-location';
 import { NavigationContainer } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState, useEffect } from 'react';
 
 
-export default function Touchable() {
+export default function IndexScreen() {
   const router = useRouter();
+  const [isChecking, setIsChecking] = useState(true);
+  useEffect(() => {
+    const checkExistingPin = async () => {
+      try{
+        const storedPin = await AsyncStorage.getItem('userPin');
+        if (!storedPin) {
+          // If no PIN is set, navigate to the SetPinScreen
+          router.replace('/setPinScreen');
+        }else {
+          router.replace('/TrackingScreen')
+        }
+        setIsChecking(false);
+      }
+      catch (error) {
+        alert('Error checking PIN: ');
+        setIsChecking(false);
+      }
+    };
+      checkExistingPin();
+    }, []);
+  if (isChecking) {
+    return <View><Text>Loading...</Text></View>;
+  }
+  return null;
   const { isDrawingMode, finishDrawing, startDrawing } = useRouteContext();
   const handleStartJourney = async () => {
     try {

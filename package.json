@@ -3,6 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
+    "@react-native-async-storage/async-storage": "2.2.0",
     "@react-navigation/native": "^7.3.11",
     "@turf/turf": "^7.4.0",
     "expo": "~57.0.4",

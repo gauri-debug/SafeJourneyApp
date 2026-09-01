@@ -5,9 +5,9 @@ import { useRouter } from 'expo-router';
 import MapView,{Marker,Polyline} from 'react-native-maps';
 import * as location from 'expo-location';
 import * as turf from '@turf/turf';
-import { RouteDrawingProvider, useRouteContext } from './useRouteDrawing';
+import { RouteDrawingProvider, useRouteContext } from '../../utils/useRouteDrawing';
 import { subscribe } from "expo-router/build/link/linking";
-import { useTimer } from './TimerContext';
+import { useTimer } from '../../utils/TimerContext';
 
 export default function MapScreen(){
     const [userCoords, setUserCoords] = useState<location.LocationObjectCoords | null>(null);
