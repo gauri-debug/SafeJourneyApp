@@ -7,6 +7,7 @@ import * as location from 'expo-location';
 import * as turf from '@turf/turf';
 import { RouteDrawingProvider, useRouteContext } from './useRouteDrawing';
 import { subscribe } from "expo-router/build/link/linking";
+import { useTimer } from './TimerContext';
 
 export default function MapScreen(){
     const [userCoords, setUserCoords] = useState<location.LocationObjectCoords | null>(null);
@@ -41,6 +42,7 @@ export default function MapScreen(){
         }
     };
 },[]);
+    const {startOffRouteTimer} = useTimer();
     useEffect(() => {
         if(isDrawingMode) return;
         if(!userCoords || !routeCoordinates || routeCoordinates.length===0) return;
@@ -49,7 +51,7 @@ export default function MapScreen(){
         const turfRouteLine = turf.lineString(geoJsonCoordinates);
         const distance = turf.pointToLineDistance(turfUserPoint, turfRouteLine, { units: 'meters' });
         if (distance > 50) {
-            alert("You are off the route!");
+            startOffRouteTimer();
         }
     }, [userCoords, routeCoordinates, isDrawingMode]);
     return (

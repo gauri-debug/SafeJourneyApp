@@ -6,6 +6,8 @@ import 'react-native-reanimated';
 import { Text } from 'react-native';
 import { Slot } from 'expo-router';
 import { RouteDrawingProvider } from './(tabs)/useRouteDrawing';
+import { TimerProvider } from './(tabs)/TimerContext';
+
 
 import { useColorScheme } from '@/components/useColorScheme';
 
@@ -44,7 +46,9 @@ export default function RootLayout() {
 
   return (
     <RouteDrawingProvider>
-       <Slot /> 
+      <TimerProvider>
+        <Stack />
+      </TimerProvider>
     </RouteDrawingProvider>
   );
 }

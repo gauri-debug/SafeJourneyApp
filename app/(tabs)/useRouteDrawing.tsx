@@ -2,13 +2,13 @@ import {useState, useContext, createContext} from 'react';
 import {LatLng} from 'react-native-maps';
 import * as turf from '@turf/turf';
 interface RouteContextType {
-  routeCoordinates: LatLng[];
-  isDrawingMode: boolean;
-  simplifiedRoute: any;
-  handlePanDrag: (e: { nativeEvent: { coordinate: LatLng } }) => void;
-  startDrawing: () => void;
-  finishDrawing: () => void;
-  clearRoute: () => void;
+    routeCoordinates: LatLng[];
+    isDrawingMode: boolean;
+    simplifiedRoute: any;
+    handlePanDrag: (e: { nativeEvent: { coordinate: LatLng } }) => void;
+    startDrawing: () => void;
+    finishDrawing: () => void;
+    clearRoute: () => void;
 }
 // Create a context for route drawing
 const RouteDrawingContext = createContext<RouteContextType | null>(null);

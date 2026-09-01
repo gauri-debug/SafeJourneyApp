@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from "expo-router/react-navigation";
+import { useTimer } from './TimerContext';
 
 const width = Dimensions.get('window').width;
 const dialPadWidth = width * 0.4;
@@ -33,6 +34,21 @@ export default function PinVerification() {
     const pinLength = 4;
     const [code, setCode] = useState<string[]>([]);
     const router = useRouter();
+    const { clearOffRouteTimer } = useTimer()
+    const EXPECTED_PIN = "1234"; // Example PIN, replace with your logic
+    useEffect(() => {
+        if (code.length === pinLength) {
+            const enteredPin = code.join('');
+            if (enteredPin === EXPECTED_PIN) {
+                console.log('PIN verified successfully!');
+                clearOffRouteTimer(); // Clear the off-route timer on successful PIN entry
+                router.push('/'); // Navigate to the main screen
+            } else {
+                alert('Incorrect PIN. Please try again.');
+                setCode([]); // Reset the code
+            }
+        }
+    }, [code]);
     useFocusEffect(
         useCallback(() => {
             // This runs when the screen comes into focus
@@ -72,9 +88,6 @@ export default function PinVerification() {
                 })}
             </View>
             <DialPad onPress={onPress}/>
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/')}>
-                <Text style={styles.buttonText}>Submit</Text>
-            </TouchableOpacity>
         </View>
     );
 }
