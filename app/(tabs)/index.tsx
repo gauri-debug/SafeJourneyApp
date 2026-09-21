@@ -9,7 +9,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState, useEffect } from 'react';
 
-
 export default function IndexScreen() {
   const router = useRouter();
   const [isChecking, setIsChecking] = useState(true);
@@ -35,7 +34,6 @@ export default function IndexScreen() {
   if (isChecking) {
     return <View><Text>Loading...</Text></View>;
   }
-  return null;
   const { isDrawingMode, finishDrawing, startDrawing } = useRouteContext();
   const handleStartJourney = async () => {
     try {

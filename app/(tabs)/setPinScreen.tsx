@@ -7,6 +7,7 @@ import { StyleSheet } from 'react-native';
 
 export default function SetPinScreen() {
     const [code, setCode] = useState<string[]>([]);
+    const [email, setEmail] = useState<string | null>(null);
     const router = useRouter();
     const pinLength = 4;
     const onPress = (item: string) => {
@@ -24,15 +25,17 @@ export default function SetPinScreen() {
 
     useEffect(() => {
         if (code.length === pinLength) {
-            const savePin = async () => {
+            const saveSetupData = async () => {
                 const pin = code.join('');
                 await AsyncStorage.setItem('userPin', pin);
+                await AsyncStorage.setItem('userEmail', email || '');
                 alert ('PIN set successfully!');
                 router.replace('/'); // Navigate to the main screen after saving the PIN
             };
-            savePin();
+            saveSetupData();
         }
     }, [code]);
+
     return (
             <View style={styles.container}>
                 <View style={styles.pinContainer}>
