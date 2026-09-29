@@ -51,7 +51,7 @@ export default function MapScreen(){
         const turfRouteLine = turf.lineString(geoJsonCoordinates);
         const distance = turf.pointToLineDistance(turfUserPoint, turfRouteLine, { units: 'meters' });
         if (distance > 50) {
-            startOffRouteTimer();
+            startOffRouteTimer(userCoords.latitude + ', ' + userCoords.longitude);
         }
     }, [userCoords, routeCoordinates, isDrawingMode]);
     return (

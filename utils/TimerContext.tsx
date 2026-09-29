@@ -1,6 +1,6 @@
 import {createContext, useState, useRef, useContext} from 'react';
 import { sendEmergencyEmail } from './emergencyEmail';
-omport AsyncStorage from '@react-native-async-storage/async-storage/lib/typescript/AsyncStorage';
+import AsyncStorage from '@react-native-async-storage/async-storage/lib/typescript/AsyncStorage';
 
 interface TimerContextType {
     startOffRouteTimer: (currentLocation: string) => void;
@@ -21,7 +21,7 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
                 if (userEmail) {
                     await sendEmergencyEmail(currentLocation, userEmail);
                 } else {
-                    console.error('You have no emergency contact information.');
+                    alert('You have no emergency contact information.');
                 }
             } catch (error) {
                 console.error('Error sending emergency email:', error);

@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DialPad from '../../components/DialPad';
 import { View } from '@/components/Themed';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextInput } from 'react-native';
 
 export default function SetPinScreen() {
     const [code, setCode] = useState<string[]>([]);
@@ -29,7 +29,7 @@ export default function SetPinScreen() {
                 const pin = code.join('');
                 await AsyncStorage.setItem('userPin', pin);
                 await AsyncStorage.setItem('userEmail', email || '');
-                alert ('PIN set successfully!');
+                alert ('PIN and email set successfully!');
                 router.replace('/'); // Navigate to the main screen after saving the PIN
             };
             saveSetupData();
@@ -38,6 +38,11 @@ export default function SetPinScreen() {
 
     return (
             <View style={styles.container}>
+                <TextInput style={styles.input} 
+                placeholder="Emergency contact email" 
+                value={email || ''} onChangeText={setEmail} 
+                keyboardType="email-address" 
+                autoCapitalize="none" />
                 <View style={styles.pinContainer}>
                     {[...Array(pinLength)].map((_, index) => {
                         const isFilled = index < code.length;
@@ -85,5 +90,13 @@ const styles = StyleSheet.create({
     pinContainer: {
         flexDirection: 'row',
         marginBottom: 20,
+    },
+    input: {
+        width: '80%',
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginBottom: 20,
+        paddingHorizontal: 10,
     },
 });
