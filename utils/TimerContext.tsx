@@ -1,7 +1,6 @@
-import {createContext, useState, useRef, useContext} from 'react';
+import React, {createContext, useRef, useContext} from 'react';
 import { sendEmergencyEmail } from './emergencyEmail';
-import AsyncStorage from '@react-native-async-storage/async-storage/lib/typescript/AsyncStorage';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 interface TimerContextType {
     startOffRouteTimer: (currentLocation: string) => void;
     clearOffRouteTimer: () => void;

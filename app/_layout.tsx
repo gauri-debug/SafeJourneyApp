@@ -5,10 +5,8 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { Text } from 'react-native';
 import { Slot } from 'expo-router';
-import { RouteDrawingProvider } from './(tabs)/useRouteDrawing';
-import { TimerProvider } from './(tabs)/TimerContext';
-
-
+import { RouteDrawingProvider } from '../utils/useRouteDrawing';
+import { TimerProvider } from '../utils/TimerContext';
 import { useColorScheme } from '@/components/useColorScheme';
 
 export {
