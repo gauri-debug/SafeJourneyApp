@@ -5,7 +5,6 @@ import { Text, View} from '@/components/Themed';
 import { TouchableOpacity } from 'react-native';
 import {useRouter} from 'expo-router';
 import * as location from 'expo-location';
-import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState, useEffect } from 'react';
 
@@ -52,7 +51,6 @@ export default function IndexScreen() {
   };
   return (
     <RouteDrawingProvider>
-      <NavigationContainer>
           <View style={styles.container}>
             <TouchableOpacity style={styles.button} onPress={handleStartJourney}>
               <Text style={styles.title}>Start Journey</Text>
@@ -60,7 +58,6 @@ export default function IndexScreen() {
           <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
           <EditScreenInfo path="app/(tabs)/index.tsx" />
         </View>
-      </NavigationContainer>
     </RouteDrawingProvider>
   );
 }
