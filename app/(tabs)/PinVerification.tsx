@@ -3,7 +3,7 @@ import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from '
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from "expo-router/react-navigation";
 import { useTimer } from '../../utils/TimerContext';
-import AsyncStorage from '@react-native-async-storage/async-storage/lib/typescript/AsyncStorage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import DialPad from '../../components/DialPad';
 
 export default function PinVerification() {
